@@ -2,11 +2,24 @@ import * as state from 'prosemirror-state';
 import * as model from 'prosemirror-model';
 import * as transform from 'prosemirror-transform';
 
+class PluginState {
+    foo = 'bar';
+}
+
+const pluginKey = new state.PluginKey('pluginKey');
 let plugin: state.Plugin;
 
-plugin = new state.Plugin({});
+plugin = new state.Plugin({ });
 plugin = new state.Plugin({
     props: {}
+});
+plugin = new state.Plugin<PluginState>({
+    props: {},
+    state: {
+        init() { return new PluginState(); },
+        apply() { return new PluginState(); }
+    },
+    key: pluginKey
 });
 
 // Verify that Transaction (that extends Transform) has the correct return types
@@ -39,3 +52,10 @@ transaction = new state.Transaction(node).setNodeType(0);
 transaction = new state.Transaction(node).split(0);
 transaction = new state.Transaction(node).join(0);
 transaction = new state.Transaction(node).step(step);
+
+// Verify that getState returns the correct type if provider, otherwise it should return
+// "any".
+const typedState = pluginKey.getState<PluginState>(new state.EditorState())!;
+const anyState = pluginKey.getState(new state.EditorState());
+const { foo } = typedState;
+const { baz } = anyState;

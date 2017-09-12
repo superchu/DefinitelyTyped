@@ -2,6 +2,7 @@
 // Project: https://github.com/ProseMirror/prosemirror-state
 // Definitions by: Bradley Ayers <https://github.com/bradleyayers>
 //                 David Hahn <https://github.com/davidka>
+//                 Oscar Wallhult <https://github.com/superchu>
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.3
 
@@ -75,7 +76,7 @@ export interface StateField <T> {
 export class PluginKey {
   constructor(name?: string)
   get(state: EditorState): Plugin | null | undefined;
-  getState(state: EditorState): any | null | undefined;
+  getState<T = any>(state: EditorState): T | null | undefined;
 }
 export class Selection {
   constructor($anchor: ResolvedPos, $head: ResolvedPos, ranges?: SelectionRange[])
